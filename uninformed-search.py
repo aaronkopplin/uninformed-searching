@@ -1,4 +1,4 @@
-class Node():
+class Node:
     def __init__(self, name: str):
         self.left = None
         self.right = None
@@ -32,23 +32,52 @@ D1.add_left_right(E1, C1)
 C1.add_left_right(B1, C2)
 C2.add_left_right(C0, goal)
 
-finalpath = []
+final_path = []
 
 
 def depth_first_search(n: Node):
-    finalpath.append(n.name)
+    final_path.append(n.name)
     if n == goal:
-        print("Path found!")
+        n.parents.append(goal.name)
         return
     elif not n.left and not n.right:
-        finalpath.pop()
+        final_path.pop()
         return
 
     if n.left:
+        n.left.parents.extend(n.parents)
+        n.left.parents.append(n.name)
         depth_first_search(n.left)
     if n.right:
+        n.right.parents.extend(n.parents)
+        n.right.parents.append(n.name)
         depth_first_search(n.right)
 
 
-depth_first_search(start)
-print(finalpath)
+# depth_first_search(start)
+# print(goal.parents)
+
+def breadth_first_search(n: Node):
+    current_layer = [n]
+    while True:
+        next_layer = []
+        for child in current_layer:
+            if child.left is not None:
+                child.left.parents.extend(child.parents)
+                child.left.parents.append(child.name)
+                next_layer.append(child.left)
+            if child.right is not None:
+                child.right.parents.extend(child.parents)
+                child.right.parents.append(child.name)
+                next_layer.append(child.right)
+        for child in next_layer:
+            if child:
+                if child == goal:
+                    child.parents.append(goal.name)
+                    return
+
+        current_layer = next_layer
+
+
+breadth_first_search(start)
+print(goal.parents)
