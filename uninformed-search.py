@@ -32,19 +32,13 @@ D1.add_left_right(E1, C1)
 C1.add_left_right(B1, C2)
 C2.add_left_right(C0, goal)
 
-final_path = []
 all_nodes = [start, A4, H2, G1, F2, G3, D1, E1, C1, B1, C2, C0, goal]
 
 
 def depth_first_search(n: Node):
-    final_path.append(n.name)
     if n == goal:
         n.parents.append(goal.name)
         return
-    elif not n.left and not n.right:
-        final_path.pop()
-        return
-
     if n.left:
         n.left.parents.extend(n.parents + [n.name])
         depth_first_search(n.left)
@@ -62,10 +56,10 @@ def breadth_first_search(n: Node):
     while True:
         next_layer = []
         for child in current_layer:
-            if child.left is not None:
+            if child.left:
                 child.left.parents.extend(child.parents + [child.name])
                 next_layer.append(child.left)
-            if child.right is not None:
+            if child.right:
                 child.right.parents.extend(child.parents + [child.name])
                 next_layer.append(child.right)
         for child in next_layer:
