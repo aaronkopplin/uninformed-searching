@@ -33,6 +33,7 @@ C1.add_left_right(B1, C2)
 C2.add_left_right(C0, goal)
 
 final_path = []
+all_nodes = [start, A4, H2, G1, F2, G3, D1, E1, C1, B1, C2, C0, goal]
 
 
 def depth_first_search(n: Node):
@@ -45,17 +46,16 @@ def depth_first_search(n: Node):
         return
 
     if n.left:
-        n.left.parents.extend(n.parents)
-        n.left.parents.append(n.name)
+        n.left.parents.extend(n.parents + [n.name])
         depth_first_search(n.left)
     if n.right:
-        n.right.parents.extend(n.parents)
-        n.right.parents.append(n.name)
+        n.right.parents.extend(n.parents + [n.name])
         depth_first_search(n.right)
 
 
-# depth_first_search(start)
-# print(goal.parents)
+depth_first_search(start)
+print("Depth first search results:\t\t{0}".format(goal.parents))
+
 
 def breadth_first_search(n: Node):
     current_layer = [n]
@@ -63,12 +63,10 @@ def breadth_first_search(n: Node):
         next_layer = []
         for child in current_layer:
             if child.left is not None:
-                child.left.parents.extend(child.parents)
-                child.left.parents.append(child.name)
+                child.left.parents.extend(child.parents + [child.name])
                 next_layer.append(child.left)
             if child.right is not None:
-                child.right.parents.extend(child.parents)
-                child.right.parents.append(child.name)
+                child.right.parents.extend(child.parents + [child.name])
                 next_layer.append(child.right)
         for child in next_layer:
             if child:
@@ -79,5 +77,9 @@ def breadth_first_search(n: Node):
         current_layer = next_layer
 
 
+# Clear nodes parents
+for n in all_nodes:
+    n.parents = []
+
 breadth_first_search(start)
-print(goal.parents)
+print("Breadth first search results:\t{0}".format(goal.parents))
