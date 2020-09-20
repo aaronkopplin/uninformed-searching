@@ -1,9 +1,9 @@
 class Node:
     def __init__(self, name: str):
-        self.left = None
-        self.right = None
-        self.parents = []
-        self.name = name
+        self.left = None  # children
+        self.right = None  # children
+        self.parents = []  # to keep track of nodes as we step through the maze
+        self.name = name  # literal location / name of the node
 
     def add_left_right(self, left, right):
         self.left = left
@@ -25,6 +25,7 @@ C2 = Node("C2")
 C0 = Node("C0")
 goal = Node("goal")
 
+# create the maze as a tree graph
 start.add_left_right(H2, A4)
 H2.add_left_right(G1, F2)
 F2.add_left_right(D1, G3)
@@ -40,15 +41,19 @@ def depth_first_search(n: Node):
         n.parents.append(goal.name)
         return
     if n.left:
+        # note that we passed a node
         n.left.parents.extend(n.parents + [n.name])
+
+        # recursive call uses a the stack (built in to computer architecture) to do 'depth'
         depth_first_search(n.left)
     if n.right:
+        # note that we passed a node
         n.right.parents.extend(n.parents + [n.name])
         depth_first_search(n.right)
 
 
 depth_first_search(start)
-print("Depth first search results:\t\t{0}".format(goal.parents))
+print("Depth first search path to goal:\t{0}".format(goal.parents))
 
 
 def breadth_first_search(n: Node):
@@ -66,6 +71,7 @@ def breadth_first_search(n: Node):
             if child:
                 if child == goal:
                     child.parents.append(goal.name)
+                    # if the loop terminates at all, we have proven that the algorithm reaches the goal
                     return
 
         current_layer = next_layer
@@ -76,4 +82,4 @@ for n in all_nodes:
     n.parents = []
 
 breadth_first_search(start)
-print("Breadth first search results:\t{0}".format(goal.parents))
+print("Breadth first search path to goal:\t{0}".format(goal.parents))
